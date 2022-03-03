@@ -21,7 +21,7 @@ button {
 
   border-radius: $btnBorderRadius;
 
-  transition: background-color 0.2s linear;
+  transition: $transition;
 }
 
 .disabled {
