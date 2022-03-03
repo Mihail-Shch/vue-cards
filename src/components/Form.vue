@@ -33,7 +33,7 @@ export default {
   padding: $formPadding;
   background-color: $white;
   max-height: $formHeigth;
-  width: $formWidth;
+  min-width: $formWidth;
   box-shadow: $formBoxShadow;
   border-radius: $formBorderRadius;
 
@@ -63,6 +63,12 @@ export default {
 
   &__btn {
     margin-top: 24px;
+  }
+}
+
+@media (max-width: 360px) {
+  .form {
+    min-width: 310px;
   }
 }
 </style>

@@ -78,13 +78,14 @@ export default {
     position: absolute;
     top: 40px;
     left: 0;
+    z-index: 2;
 
     .filter {
-      padding: 10px 0;
-      transition: background-color 0.2s linear;
+      padding: $filterPadding;
+      transition: $transition;
 
       &:hover {
-        background-color: rgb(233, 231, 231);
+        background-color: $lightGrey;
       }
     }
   }

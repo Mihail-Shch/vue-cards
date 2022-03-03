@@ -31,8 +31,6 @@ textarea {
   &:focus {
     background: $ligthBlue;
     border: 1px solid $blue;
-
-    outline: none;
   }
 }
 </style>

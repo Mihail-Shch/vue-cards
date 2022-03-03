@@ -1,20 +1,27 @@
+// Colors
 $white: #fff;
+$black: #000;
 $grey: #B4B4B4;
+$lightGrey: #e9e7e7;
 $blue: #1390e5;
 $ligthBlue: #c5e4f94d;
 $bodyColor: #FAF9F7;
 $green: #7BAE73;
 $darkGreen: #028a02;
 $pink: #FF8484;
+$darkPink: #fa6565;
 
 
 
 // Globals
 $container: 1440px;
 $containerPadding: 0px 32px;
+$transition: background-color 0.2s linear;
 
 // Header
 $headerTitleFontSize: 28px;
+$headerBurgerWidth: 50px;
+$headerBurgerHeight: 50px;
 
 // Input
 $inputTitleFontSize: 10px;
@@ -37,8 +44,12 @@ $cardTitleFontSize: 20px;
 $cardInfoPadding: 16px 16px 24px;;
 $cardDescFontSize: 16px;
 $cardPriceFontSize: 24px;
+$cardDeleteRadius: 10px;
+$cardDeleteWidth: 32px;
+$cardDeleteHeigth: 32px;
 // Filters
 $filtersBorderRadius: 4px;
 $filterFontSize: 12px;
 $filtersPadding: 10px 16px;
+$filterPadding: 10px 0px;
 $filtersShadow: 0px 2px 5px #0000001a;
