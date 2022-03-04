@@ -11,9 +11,9 @@
     <div class="filters__options" v-if="isActive">
       <p
         class="filter"
-        v-for="option in options"
+        v-for="option in filters"
         :key="option.value"
-        @click="selected = option.name"
+        @click="setSelected(option)"
       >
         {{ option.name }}
       </p>
@@ -31,15 +31,19 @@ export default {
     };
   },
   props: {
-    options: Array,
+    filters: Array,
   },
   methods: {
     closeFilters() {
       this.isActive = false;
     },
+    setSelected(option) {
+      this.selected = option.name;
+      this.$emit("sort", option);
+    },
   },
   created() {
-    this.selected = this.options[0].name;
+    this.selected = this.filters[0].name;
   },
   directives: {
     ClickOutside,

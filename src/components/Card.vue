@@ -1,12 +1,19 @@
 <template>
   <div class="card" @mouseover="hoverOver" @mouseleave="hoverOut">
-    <img src="@/assets/img/card-photo.png" alt="card photo" />
+    <img src="../assets/img/card-photo.png" alt="card photo" />
     <div class="card__info">
-      <h3 class="card__info-title">{{ card.name }}</h3>
-      <p class="card__info-desc">{{ card.description }}</p>
+      <div class="card__info-text">
+        <h3 class="card__info-title">{{ card.name }}</h3>
+        <p class="card__info-desc">{{ card.description }}</p>
+      </div>
       <span class="card__info-price">{{ card.price }} руб.</span>
     </div>
-    <div class="card__delete" :class="trashClasses" v-if="hover">
+    <div
+      class="card__delete"
+      :class="trashClasses"
+      v-if="hover"
+      @click="$emit('delete', card)"
+    >
       <img src="@/assets/img/trash.svg" alt="trash" />
     </div>
   </div>
@@ -20,6 +27,9 @@ export default {
       trashClasses: [],
     };
   },
+  props: {
+    card: Object,
+  },
   methods: {
     hoverOver() {
       this.trashClasses = ["fadeIn"];
@@ -32,9 +42,6 @@ export default {
       }, 300);
     },
   },
-  props: {
-    card: Object,
-  },
 };
 </script>
 
@@ -42,10 +49,14 @@ export default {
 .card {
   @extend %column;
   position: relative;
+  min-height: $cardHeight;
   cursor: pointer;
   &__info {
     background-color: $white;
     padding: $cardInfoPadding;
+    @extend %column;
+    justify-content: space-between;
+    height: 100%;
 
     &-title {
       font-size: $cardTitleFontSize;
