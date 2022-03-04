@@ -4,12 +4,17 @@
       <header class="header">
         <h1 class="header__title">Добавление товара</h1>
         <Burger @toggle="toggleActive" />
-        <Filters :options="options" />
+        <Filters v-if="ifOptionsExist" :filters="options" @sort="sortCards" />
       </header>
-      <div class="content">
-        <Form :class="formClasses" />
-        <div class="cards-wrapper">
-          <Card v-for="(item, index) in 12" :card="card" :key="index" />
+      <div class="content" v-if="ifCardsExist">
+        <Form :class="formClasses" v-model="cards" />
+        <div class="cards-wrapper" v-if="cards">
+          <Card
+            v-for="(item, index) in cards"
+            :card="item"
+            :key="index"
+            @delete="deleteCard"
+          />
         </div>
       </div>
     </div>
@@ -25,30 +30,8 @@ export default {
   name: "App",
   data() {
     return {
-      card: {
-        name: "Наименование товара",
-        description:
-          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
-        price: "10 000",
-      },
-      options: [
-        {
-          name: "По умолчанию",
-          value: 0,
-        },
-        {
-          name: "По цене min",
-          value: 1,
-        },
-        {
-          name: "По цене max",
-          value: 2,
-        },
-        {
-          name: "По наименованию",
-          value: 3,
-        },
-      ],
+      options: [],
+      cards: [],
       formIsActive: false,
       formClasses: [],
     };
@@ -71,6 +54,62 @@ export default {
         this.formIsActive = true;
       }
     },
+    deleteCard(item) {
+      const filteredArr = this.cards.filter((card) => card.id !== item.id);
+      this.cards = filteredArr;
+    },
+    sortCards(option) {
+      switch (option.value) {
+        case "min":
+          this.sortByMinPrice();
+          break;
+        case "max":
+          this.sortByMaxPrice();
+          break;
+        case "name":
+          this.sortByName();
+          break;
+      }
+    },
+    deleteSpaces(str) {
+      return str.replaceAll(" ", "");
+    },
+    sortByMinPrice() {
+      this.cards = this.cards.sort(
+        (a, b) =>
+          Number(this.deleteSpaces(a.price)) -
+          Number(this.deleteSpaces(b.price))
+      );
+    },
+    sortByMaxPrice() {
+      this.cards = this.cards.sort(
+        (a, b) =>
+          Number(this.deleteSpaces(b.price)) -
+          Number(this.deleteSpaces(a.price))
+      );
+    },
+    sortByName() {
+      this.cards = this.cards.sort((a, b) => (a.name > b.name ? 1 : -1));
+    },
+  },
+  computed: {
+    ifCardsExist() {
+      return !!this.cards.length > 0;
+    },
+    ifOptionsExist() {
+      return !!this.options.length > 0;
+    },
+  },
+  async created() {
+    const res = await Promise.all([
+      fetch("http://localhost:8081/cards"),
+      fetch("http://localhost:8081/filters"),
+    ]);
+
+    const data = await Promise.all(res.map((r) => r.json()));
+
+    this.cards = data[0];
+    this.options = data[1];
   },
 };
 </script>
