@@ -17,7 +17,12 @@
     <span class="form__input-title required">Ссылка на изображение товара</span>
     <Input class="form__input" v-model="link" placeholder="Введите ссылку" />
     <span class="form__input-title required">Цена товара</span>
-    <Input class="form__input" v-model="price" placeholder="Введите цену" />
+    <Input
+      class="form__input"
+      v-model="price"
+      @input="maskForPrice"
+      placeholder="Введите цену"
+    />
     <Button
       :class="['form__btn', checkInputs ? 'enabled' : 'disabled']"
       type="submit"
@@ -48,14 +53,38 @@ export default {
   },
   methods: {
     addCard() {
-      const card = {
-        name: this.name,
-        description: this.description,
-        price: this.price.replace(/\B(?=(\d{3})+(?!\d))/g, " "),
-        photo: this.link,
-      };
-      this.cardsCopy.push(card);
-      this.$emit("input", this.cardsCopy);
+      if (this.validateInputs()) {
+        const card = {
+          name: this.name,
+          id: Math.random().toString(36).slice(2),
+          description: this.description,
+          price: this.price.replace(/\B(?=(\d{3})+(?!\d))/g, " "),
+          path: this.link,
+        };
+        this.cardsCopy.unshift(card);
+        this.$emit("input", this.cardsCopy);
+
+        this.clearForm();
+      } else return;
+    },
+    clearForm() {
+      this.name = "";
+      this.description = "";
+      this.link = "";
+      this.price = "";
+    },
+    maskForPrice() {
+      this.price = this.price
+        .replaceAll(" ", "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    },
+    validateInputs() {
+      const regExp = /^\d+$/;
+      return (
+        this.name !== "" &&
+        this.link !== "" &&
+        regExp.test(this.price.replaceAll(" ", ""))
+      );
     },
   },
   computed: {
@@ -77,6 +106,11 @@ export default {
   min-width: $formWidth;
   box-shadow: $formBoxShadow;
   border-radius: $formBorderRadius;
+
+  &__error {
+    color: $black;
+    font-size: $inputTitleFontSize;
+  }
 
   &__input-title {
     display: block;

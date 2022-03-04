@@ -1,15 +1,27 @@
 <template>
   <textarea
     v-if="textarea"
-    @input="$emit('input', $event.target.value)"
+    v-model="content"
+    @input="$emit('input', content)"
   ></textarea>
-  <input v-else type="text" @input="$emit('input', $event.target.value)" />
+  <input v-else v-model="content" @input="$emit('input', content)" />
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      content: "",
+    };
+  },
   props: {
+    value: String,
     textarea: Boolean,
+  },
+  watch: {
+    value(val) {
+      this.content = val;
+    },
   },
 };
 </script>
@@ -29,7 +41,7 @@ textarea {
   resize: none;
 
   &:focus {
-    background: $ligthBlue;
+    background: $lightBlue;
     border: 1px solid $blue;
   }
 }
