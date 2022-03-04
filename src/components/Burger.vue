@@ -1,7 +1,7 @@
 <template>
   <div
-    :class="['header__burger', { active: isActive }]"
-    @click="$emit('toggle', (isActive = !isActive))"
+    :class="['header__burger', { active: formState }]"
+    @click="updateFormState"
   >
     <span class="header__burger-span"> </span>
   </div>
@@ -11,8 +11,20 @@
 export default {
   data() {
     return {
-      isActive: false,
+      formState: false,
     };
+  },
+  props: {
+    formIsActive: Boolean,
+  },
+  methods: {
+    updateFormState() {
+      this.formState = !this.formState;
+      this.$emit("toggle", this.formState);
+    },
+  },
+  created() {
+    this.formState = this.formIsActive;
   },
 };
 </script>

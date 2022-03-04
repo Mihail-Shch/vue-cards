@@ -3,7 +3,7 @@
     <div class="container">
       <header class="header">
         <h1 class="header__title">Добавление товара</h1>
-        <Burger @toggle="toggleActive" />
+        <Burger @toggle="toggleActive" v-model="formIsActive" />
         <Filters v-if="ifOptionsExist" :filters="options" @sort="sortCards" />
       </header>
       <div class="content" v-if="ifCardsExist">
@@ -149,10 +149,6 @@ export default {
 }
 
 @media (max-width: 1070px) {
-  .cards-wrapper {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .header {
     position: relative;
   }
@@ -183,7 +179,7 @@ export default {
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 650px) {
   .cards-wrapper {
     grid-template-columns: 1fr;
   }

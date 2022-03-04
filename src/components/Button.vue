@@ -1,17 +1,8 @@
 <template>
-  <button :class="[{ disabled: disabled, enabled: enabled }]">
+  <button>
     <slot />
   </button>
 </template>
-
-<script>
-export default {
-  props: {
-    disabled: Boolean,
-    enabled: Boolean,
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 button {
