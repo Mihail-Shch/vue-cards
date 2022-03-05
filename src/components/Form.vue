@@ -1,12 +1,12 @@
 <template>
   <form class="form" @submit.prevent="addCard">
-    <span class="form__input-title required">Наименование товара</span>
+    <label class="form__input-title required">Наименование товара</label>
     <Input
       class="form__input"
       v-model="name"
       placeholder="Введите наименование товара"
     />
-    <span class="form__input-title">Описание товара</span>
+    <label class="form__input-title">Описание товара</label>
     <Input
       class="form__input"
       v-model="description"
@@ -14,9 +14,11 @@
       rows="6"
       textarea
     />
-    <span class="form__input-title required">Ссылка на изображение товара</span>
+    <label class="form__input-title required"
+      >Ссылка на изображение товара</label
+    >
     <Input class="form__input" v-model="link" placeholder="Введите ссылку" />
-    <span class="form__input-title required">Цена товара</span>
+    <label class="form__input-title required">Цена товара</label>
     <Input
       class="form__input"
       v-model="price"
@@ -116,7 +118,6 @@ export default {
     display: block;
     font-size: $inputTitleFontSize;
     margin-bottom: 5px;
-    font-weight: 300;
 
     &.required::after {
       content: "";

@@ -4,7 +4,7 @@
       <header class="header">
         <h1 class="header__title">Добавление товара</h1>
         <Burger @toggle="toggleActive" v-model="formIsActive" />
-        <Filters v-if="ifOptionsExist" :filters="options" @sort="sortCards" />
+        <Filters :filters="options" @sort="sortCards" />
       </header>
       <div class="content" v-if="ifCardsExist">
         <Form :class="formClasses" v-model="cards" />
@@ -30,7 +30,24 @@ export default {
   name: "App",
   data() {
     return {
-      options: [],
+      options: [
+        {
+          name: "По умолчанию",
+          value: "default",
+        },
+        {
+          name: "По цене min",
+          value: "min",
+        },
+        {
+          name: "По цене max",
+          value: "max",
+        },
+        {
+          name: "По наименованию",
+          value: "name",
+        },
+      ],
       cards: [],
       formIsActive: false,
       formClasses: [],
@@ -96,20 +113,13 @@ export default {
     ifCardsExist() {
       return !!this.cards.length > 0;
     },
-    ifOptionsExist() {
-      return !!this.options.length > 0;
-    },
   },
   async created() {
-    const res = await Promise.all([
-      fetch("http://localhost:8081/cards"),
-      fetch("http://localhost:8081/filters"),
-    ]);
+    const res = await fetch("http://localhost:8081/cards");
+    const data = await res.json();
+    console.log(data);
 
-    const data = await Promise.all(res.map((r) => r.json()));
-
-    this.cards = data[0];
-    this.options = data[1];
+    this.cards = data;
   },
 };
 </script>
@@ -125,6 +135,7 @@ export default {
 }
 .header__title {
   font-size: $headerTitleFontSize;
+  font-weight: 600;
 }
 
 .content {
