@@ -1,23 +1,25 @@
 <template>
   <div class="card" @mouseover="hover = true" @mouseleave="hover = false">
-    <img
-      :src="card.path"
-      class="card__photo"
-      alt="card photo"
-      crossorigin="anonymous"
-    />
-    <div class="card__info">
-      <div class="card__info-text">
-        <h3 class="card__info-title">{{ card.name }}</h3>
-        <p class="card__info-desc">{{ card.description }}</p>
+    <div class="card__inner">
+      <img
+        :src="card.path"
+        class="card__photo"
+        alt="card photo"
+        crossorigin="anonymous"
+      />
+      <div class="card__info">
+        <div class="card__info-text">
+          <h3 class="card__info-title">{{ card.name }}</h3>
+          <p class="card__info-desc">{{ card.description }}</p>
+        </div>
+        <span class="card__info-price">{{ card.price }} руб.</span>
       </div>
-      <span class="card__info-price">{{ card.price }} руб.</span>
+      <transition name="fade">
+        <div v-if="hover" class="card__delete" @click="$emit('delete', card)">
+          <img src="@/assets/img/trash.svg" alt="trash" />
+        </div>
+      </transition>
     </div>
-    <transition name="fade">
-      <div v-if="hover" class="card__delete" @click="$emit('delete', card)">
-        <img src="@/assets/img/trash.svg" alt="trash" />
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -36,20 +38,24 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  @extend %column;
   position: relative;
+  box-shadow: $cardBoxShadow;
+  border-radius: $cardBorderRadius;
   cursor: pointer;
 
+  &__inner {
+    @extend %column;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+
   &__photo {
-    height: 100%;
     max-width: 100%;
-    border-radius: $cardBorderRadius $cardBorderRadius 0 0;
   }
 
   &__info {
     height: 100%;
     background-color: $white;
-    border-radius: 0 0 $cardBorderRadius $cardBorderRadius;
 
     padding: $cardInfoPadding;
 
@@ -58,18 +64,20 @@ export default {
 
     &-title {
       font-size: $cardTitleFontSize;
+      font-weight: 600;
       margin-bottom: 16px;
     }
 
     &-desc {
       font-size: $cardDescFontSize;
-      font-weight: 300;
+      line-height: 1.25;
 
       margin-bottom: 32px;
     }
 
     &-price {
       font-size: $cardPriceFontSize;
+      font-weight: 600;
     }
   }
   &__delete {

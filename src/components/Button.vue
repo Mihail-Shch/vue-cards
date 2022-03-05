@@ -9,6 +9,7 @@ button {
   width: 100%;
   padding: $btnPadding;
   color: $grey;
+  font-weight: 600;
 
   border-radius: $btnBorderRadius;
 

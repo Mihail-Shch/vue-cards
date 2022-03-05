@@ -9,14 +9,14 @@
       <img class="filters__arrow" src="@/assets/img/arrow.svg" alt="arrow" />
     </p>
     <div class="filters__options" v-if="isActive">
-      <p
+      <li
         class="filter"
         v-for="option in filters"
         :key="option.value"
         @click="setSelected(option)"
       >
         {{ option.name }}
-      </p>
+      </li>
     </div>
   </div>
 </template>
@@ -55,14 +55,13 @@ export default {
 .filters {
   color: $grey;
   font-size: $filterFontSize;
-  font-weight: 300;
 
   background-color: $white;
   border-radius: $filtersBorderRadius;
 
   padding: $filtersPadding;
 
-  box-shadow: $filtersShadow;
+  box-shadow: $filtersBoxShadow;
 
   cursor: pointer;
 
@@ -87,6 +86,7 @@ export default {
     .filter {
       padding: $filterPadding;
       transition: $transition;
+      list-style-type: none;
 
       &:hover {
         background-color: $lightGrey;
