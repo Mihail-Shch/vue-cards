@@ -148,11 +148,7 @@ export default {
     //     .replaceAll(" ", "")
     //     .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     // },
-  },
-  computed: {
-    checkInputs() {
-      return this.form.name && this.form.link && this.form.price;
-    },
+    // И проверка нормальная на ссылку
   },
   created() {
     this.cardsCopy = this.value;
