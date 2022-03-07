@@ -117,7 +117,6 @@ export default {
   async created() {
     const res = await fetch("http://localhost:8081/cards");
     const data = await res.json();
-    console.log(data);
 
     this.cards = data;
   },

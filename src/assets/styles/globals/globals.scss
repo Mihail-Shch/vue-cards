@@ -3,37 +3,31 @@
 *,
 *::after,
 *::before {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    -webkit-tap-highlight-color: transparent; 
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .container {
-    max-width: $container;
-    margin: 0 auto;
-    padding: $containerPadding;
+  max-width: $container;
+  margin: 0 auto;
+  padding: $containerPadding;
 }
 
 body {
-    background-color: $bodyColor;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 400;
+  background-color: $bodyColor;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 400;
 }
 
 ::placeholder {
-    color: $grey;
-    font-family: "Source Sans Pro", sans-serif;
+  color: $grey;
+  font-family: "Source Sans Pro", sans-serif;
 }
 
-a, button {
-    cursor: pointer;
-}
-
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0; 
+a,
+button {
+  cursor: pointer;
 }

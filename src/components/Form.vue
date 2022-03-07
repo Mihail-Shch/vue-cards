@@ -1,32 +1,77 @@
 <template>
-  <form class="form" @submit.prevent="addCard">
-    <label class="form__input-title required">Наименование товара</label>
-    <Input
-      class="form__input"
-      v-model="name"
-      placeholder="Введите наименование товара"
-    />
-    <label class="form__input-title">Описание товара</label>
-    <Input
-      class="form__input"
-      v-model="description"
-      placeholder="Введите описание товара"
-      rows="6"
-      textarea
-    />
-    <label class="form__input-title required"
-      >Ссылка на изображение товара</label
+  <form class="form" @submit.prevent="addUser">
+    <div class="form__input-wrapper" :class="{ hasError: $v.form.name.$error }">
+      <label class="form__input-title required">Наименование товара</label>
+      <Input
+        class="form__input"
+        v-model="form.name"
+        placeholder="Введите наименование товара"
+      />
+      <small
+        class="form__error"
+        v-if="$v.form.name.$dirty && !$v.form.name.required"
+        >Поле обязательно!</small
+      >
+      <small
+        class="form__error"
+        v-if="$v.form.name.$dirty && !$v.form.name.minLength"
+        >Минимум 4 символа</small
+      >
+    </div>
+    <div class="form__input-wrapper">
+      <label class="form__input-title">Описание товара</label>
+      <Input
+        class="form__input"
+        v-model="form.description"
+        placeholder="Введите описание товара"
+        rows="6"
+        textarea
+      />
+    </div>
+    <div class="form__input-wrapper" :class="{ hasError: $v.form.link.$error }">
+      <label class="form__input-title required"
+        >Ссылка на изображение товара</label
+      >
+      <Input
+        class="form__input"
+        v-model="form.link"
+        placeholder="Введите ссылку"
+      />
+      <small
+        class="form__error"
+        v-if="$v.form.link.$dirty && !$v.form.link.required"
+        >Поле обязательно!</small
+      >
+      <small
+        class="form__error"
+        v-if="$v.form.link.$dirty && !$v.form.link.minLength"
+        >Минимум 4 символа</small
+      >
+    </div>
+    <div
+      class="form__input-wrapper"
+      :class="{ hasError: $v.form.price.$error }"
     >
-    <Input class="form__input" v-model="link" placeholder="Введите ссылку" />
-    <label class="form__input-title required">Цена товара</label>
-    <Input
-      class="form__input"
-      v-model="price"
-      @input="maskForPrice"
-      placeholder="Введите цену"
-    />
+      <label class="form__input-title required">Цена товара</label>
+      <Input
+        class="form__input"
+        v-model="form.price"
+        placeholder="Введите цену"
+      />
+      <small
+        class="form__error"
+        v-if="$v.form.price.$dirty && !$v.form.price.required"
+        >Поле обязательно!</small
+      >
+      <small
+        class="form__error"
+        v-if="$v.form.price.$dirty && !$v.form.price.between"
+        >Введите число между {{ $v.form.price.$params.between.min }} и
+        {{ $v.form.price.$params.between.max }}</small
+      >
+    </div>
     <Button
-      :class="['form__btn', checkInputs ? 'enabled' : 'disabled']"
+      :class="['form__btn', $v.form.$anyError ? 'disabled' : 'enabled']"
       type="submit"
       >Добавить товар</Button
     >
@@ -34,64 +79,79 @@
 </template>
 
 <script>
+import { minLength, required, between } from "vuelidate/lib/validators";
+
 import Input from "@/components/Input.vue";
 import Button from "@/components/Button.vue";
 export default {
   data() {
     return {
-      name: "",
-      description: "",
-      link: "",
-      price: "",
+      form: {
+        name: "",
+        description: "",
+        link: "",
+        price: "",
+      },
       cardsCopy: [],
     };
   },
   props: {
     value: Array,
   },
+  validations: {
+    form: {
+      name: {
+        required,
+        minLength: minLength(4),
+      },
+      price: {
+        required,
+        between: between(1, 999999),
+      },
+      link: {
+        required,
+        minLength: minLength(4),
+      },
+    },
+  },
   components: {
     Input,
     Button,
   },
   methods: {
-    addCard() {
-      if (this.validateInputs()) {
-        const card = {
-          name: this.name,
-          id: Math.random().toString(36).slice(2),
-          description: this.description,
-          price: this.price.replace(/\B(?=(\d{3})+(?!\d))/g, " "),
-          path: this.link,
-        };
-        this.cardsCopy.unshift(card);
-        this.$emit("input", this.cardsCopy);
+    addUser() {
+      this.$v.form.$touch();
+      if (this.$v.form.$pending || this.$v.form.$error) return;
 
-        this.clearForm();
-      } else return;
+      const card = {
+        name: this.form.name,
+        id: Math.random().toString(36).slice(2),
+        description: this.form.description,
+        price: this.form.price.replace(/\B(?=(\d{3})+(?!\d))/g, " "),
+        path: this.form.link,
+      };
+      this.cardsCopy.unshift(card);
+      this.$emit("input", this.cardsCopy);
+
+      this.clearForm();
+      this.$v.form.$reset();
     },
     clearForm() {
-      this.name = "";
-      this.description = "";
-      this.link = "";
-      this.price = "";
+      this.form.name = "";
+      this.form.description = "";
+      this.form.link = "";
+      this.form.price = "";
     },
-    maskForPrice() {
-      this.price = this.price
-        .replaceAll(" ", "")
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    },
-    validateInputs() {
-      const regExp = /^\d+$/;
-      return (
-        this.name !== "" &&
-        this.link !== "" &&
-        regExp.test(this.price.replaceAll(" ", ""))
-      );
-    },
+    // maskForPrice() {
+    //   this.form.price = this.form.price
+    //     .toString()
+    //     .replaceAll(" ", "")
+    //     .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    // },
   },
   computed: {
     checkInputs() {
-      return this.name && this.link && this.price;
+      return this.form.name && this.form.link && this.form.price;
     },
   },
   created() {
@@ -104,13 +164,13 @@ export default {
 .form {
   padding: $formPadding;
   background-color: $white;
-  max-height: $formHeigth;
+  height: 100%;
   min-width: $formWidth;
   box-shadow: $formBoxShadow;
   border-radius: $formBorderRadius;
 
   &__error {
-    color: $black;
+    color: $red;
     font-size: $inputTitleFontSize;
   }
 
@@ -133,7 +193,15 @@ export default {
     }
   }
 
-  &__input + &__input-title {
+  &__input-wrapper.hasError label {
+    color: $red;
+  }
+
+  &__input-wrapper.hasError input {
+    border-color: $red;
+  }
+
+  &__input-wrapper + &__input-wrapper {
     margin-top: 16px;
   }
 

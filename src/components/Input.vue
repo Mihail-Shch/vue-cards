@@ -2,7 +2,7 @@
   <textarea
     v-if="textarea"
     v-model="content"
-    @input="$emit('input', content)"
+    @input="emit('input', content)"
   ></textarea>
   <input v-else v-model="content" @input="$emit('input', content)" />
 </template>
@@ -44,5 +44,11 @@ textarea {
     background: $lightBlue;
     border: 1px solid $blue;
   }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

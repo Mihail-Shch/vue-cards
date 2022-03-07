@@ -45,6 +45,7 @@ export default {
 
   &__inner {
     @extend %column;
+    height: 100%;
     overflow: hidden;
     border-radius: inherit;
   }
@@ -54,7 +55,7 @@ export default {
   }
 
   &__info {
-    height: 100%;
+    flex: 1;
     background-color: $white;
 
     padding: $cardInfoPadding;
