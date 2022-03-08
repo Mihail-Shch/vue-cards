@@ -15,7 +15,7 @@ export default {
     };
   },
   props: {
-    value: String,
+    value: [String, Number],
     textarea: Boolean,
   },
   watch: {
@@ -44,11 +44,5 @@ textarea {
     background: $lightBlue;
     border: 1px solid $blue;
   }
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
 }
 </style>

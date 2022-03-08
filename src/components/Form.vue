@@ -42,10 +42,8 @@
         v-if="$v.form.link.$dirty && !$v.form.link.required"
         >Поле обязательно!</small
       >
-      <small
-        class="form__error"
-        v-if="$v.form.link.$dirty && !$v.form.link.minLength"
-        >Минимум 4 символа</small
+      <small class="form__error" v-if="$v.form.link.$dirty && !$v.form.link.url"
+        >Неккоректный формат ссылки</small
       >
     </div>
     <div
@@ -79,7 +77,7 @@
 </template>
 
 <script>
-import { minLength, required, between } from "vuelidate/lib/validators";
+import { minLength, required, url, between } from "vuelidate/lib/validators";
 
 import Input from "@/components/Input.vue";
 import Button from "@/components/Button.vue";
@@ -110,7 +108,7 @@ export default {
       },
       link: {
         required,
-        minLength: minLength(4),
+        url,
       },
     },
   },
@@ -142,13 +140,6 @@ export default {
       this.form.link = "";
       this.form.price = "";
     },
-    // maskForPrice() {
-    //   this.form.price = this.form.price
-    //     .toString()
-    //     .replaceAll(" ", "")
-    //     .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    // },
-    // И проверка нормальная на ссылку
   },
   created() {
     this.cardsCopy = this.value;
