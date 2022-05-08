@@ -2,7 +2,7 @@
   <textarea
     v-if="textarea"
     v-model="content"
-    @input="emit('input', content)"
+    @input="$emit('input', content)"
   ></textarea>
   <input v-else v-model="content" @input="$emit('input', content)" />
 </template>

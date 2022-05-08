@@ -2,20 +2,25 @@
   <div class="card" @mouseover="hover = true" @mouseleave="hover = false">
     <div class="card__inner">
       <img
-        :src="card.path"
+        :src="card.link"
         class="card__photo"
         alt="card photo"
         crossorigin="anonymous"
       />
       <div class="card__info">
         <div class="card__info-text">
-          <h3 class="card__info-title">{{ card.name }}</h3>
+          <h3 class="card__info-title">{{ card.title }}</h3>
           <p class="card__info-desc">{{ card.description }}</p>
         </div>
-        <span class="card__info-price">{{ card.price }} руб.</span>
+        <span class="card__info-price"
+          >{{
+            card.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+          руб.</span
+        >
       </div>
       <transition name="fade">
-        <div v-if="hover" class="card__delete" @click="$emit('delete', card)">
+        <div v-if="hover" class="card__delete" @click="deleteCard(card)">
           <img src="@/assets/img/trash.svg" alt="trash" />
         </div>
       </transition>
@@ -24,6 +29,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -32,6 +39,13 @@ export default {
   },
   props: {
     card: Object,
+  },
+  methods: {
+    deleteCard(card) {
+      this.$emit("delete", card);
+
+      axios.post("http://localhost:3000/api/delete-card", { id: card._id });
+    },
   },
 };
 </script>

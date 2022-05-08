@@ -1,5 +1,5 @@
 <template>
-  <form class="form" @submit.prevent="addUser">
+  <form class="form" @submit.prevent="addCard">
     <div class="form__input-wrapper" :class="{ hasError: $v.form.name.$error }">
       <label class="form__input-title required">Наименование товара</label>
       <Input
@@ -81,6 +81,8 @@ import { minLength, required, url, between } from "vuelidate/lib/validators";
 
 import Input from "@/components/Input.vue";
 import Button from "@/components/Button.vue";
+
+import axios from "axios";
 export default {
   data() {
     return {
@@ -95,6 +97,11 @@ export default {
   },
   props: {
     value: Array,
+  },
+  watch: {
+    value(val) {
+      this.cardsCopy = val;
+    },
   },
   validations: {
     form: {
@@ -117,19 +124,20 @@ export default {
     Button,
   },
   methods: {
-    addUser() {
+    addCard() {
       this.$v.form.$touch();
       if (this.$v.form.$pending || this.$v.form.$error) return;
 
       const card = {
-        name: this.form.name,
-        id: Math.random().toString(36).slice(2),
+        title: this.form.name,
         description: this.form.description,
-        price: this.form.price.replace(/\B(?=(\d{3})+(?!\d))/g, " "),
-        path: this.form.link,
+        link: this.form.link,
+        price: this.form.price,
       };
       this.cardsCopy.unshift(card);
       this.$emit("input", this.cardsCopy);
+
+      axios.post("http://localhost:3000/api/add-card", card);
 
       this.clearForm();
       this.$v.form.$reset();

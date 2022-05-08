@@ -4,11 +4,11 @@
       <header class="header">
         <h1 class="header__title">Добавление товара</h1>
         <Burger @toggle="toggleActive" v-model="formIsActive" />
-        <Filters :filters="options" @sort="sortCards" />
+        <Filters :filters="options" v-model="cards" />
       </header>
-      <div class="content" v-if="ifCardsExist">
+      <div class="content">
         <Form :class="formClasses" v-model="cards" />
-        <div class="cards-wrapper" v-if="cards">
+        <div class="cards-wrapper">
           <Card
             v-for="(item, index) in cards"
             :card="item"
@@ -33,19 +33,19 @@ export default {
       options: [
         {
           name: "По умолчанию",
-          value: "default",
+          value: "byDefault",
         },
         {
           name: "По цене min",
-          value: "min",
+          value: "byPriceMinToMax",
         },
         {
           name: "По цене max",
-          value: "max",
+          value: "byPriceMaxToMin",
         },
         {
           name: "По наименованию",
-          value: "name",
+          value: "byTitle",
         },
       ],
       cards: [],
@@ -72,51 +72,14 @@ export default {
       }
     },
     deleteCard(item) {
-      const filteredArr = this.cards.filter((card) => card.id !== item.id);
+      const filteredArr = this.cards.filter((card) => card._id !== item._id);
+      console.log(filteredArr);
       this.cards = filteredArr;
-    },
-    sortCards(option) {
-      switch (option.value) {
-        case "min":
-          this.sortByMinPrice();
-          break;
-        case "max":
-          this.sortByMaxPrice();
-          break;
-        case "name":
-          this.sortByName();
-          break;
-      }
-    },
-    deleteSpaces(str) {
-      return str.replaceAll(" ", "");
-    },
-    sortByMinPrice() {
-      this.cards = this.cards.sort(
-        (a, b) =>
-          Number(this.deleteSpaces(a.price)) -
-          Number(this.deleteSpaces(b.price))
-      );
-    },
-    sortByMaxPrice() {
-      this.cards = this.cards.sort(
-        (a, b) =>
-          Number(this.deleteSpaces(b.price)) -
-          Number(this.deleteSpaces(a.price))
-      );
-    },
-    sortByName() {
-      this.cards = this.cards.sort((a, b) => (a.name > b.name ? 1 : -1));
-    },
-  },
-  computed: {
-    ifCardsExist() {
-      return !!this.cards.length > 0;
     },
   },
   async created() {
-    const res = await fetch("http://localhost:8081/cards");
-    const data = await res.json();
+    const req = await fetch("http://localhost:3000/api/cards");
+    const data = await req.json();
 
     this.cards = data;
   },

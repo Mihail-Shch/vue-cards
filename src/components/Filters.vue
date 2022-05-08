@@ -13,7 +13,7 @@
         class="filter"
         v-for="option in filters"
         :key="option.value"
-        @click="setSelected(option)"
+        @click="setFilteredCards(option)"
       >
         {{ option.name }}
       </li>
@@ -23,6 +23,7 @@
 
 <script>
 import ClickOutside from "vue-click-outside";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -32,14 +33,25 @@ export default {
   },
   props: {
     filters: Array,
+    value: Array,
+  },
+  watch: {
+    value(val) {
+      this.cardsCopy = val;
+    },
   },
   methods: {
     closeFilters() {
       this.isActive = false;
     },
-    setSelected(option) {
+    async setFilteredCards(option) {
       this.selected = option.name;
-      this.$emit("sort", option);
+
+      const req = await axios.get(
+        `http://localhost:3000/api/sortCards?q=${option.value}`
+      );
+      console.log(req);
+      this.$emit("input", req.data);
     },
   },
   created() {
